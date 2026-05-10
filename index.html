@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido Oriflame</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>Pedido Oriflame 🛍️</h1>
+    <p class="subtitulo">Formulario de pedido y asesoramiento personalizado</p>
+
+    <div class="beneficios">
+      <h2>✨ Beneficios por ser Member</h2>
+      <ul>
+        <li>🎁 15% de descuento de bienvenida</li>
+        <li>💸 15% de descuento para siempre en todos tus pedidos</li>
+        <li>🤍 Acceso a ofertas y promociones especiales</li>
+        <li>🚚 Envío gratis en productos seleccionados</li>
+      </ul>
+    </div>
+
+    <form id="pedidoForm">
+
+      <label>Nombre y apellidos *</label>
+      <input type="text" id="nombre" required>
+
+      <label>Dirección *</label>
+      <input type="text" id="direccion" required>
+
+      <label>Código Postal *</label>
+      <input type="text" id="cp" required>
+
+      <label>Email *</label>
+      <input type="email" id="email" required>
+
+      <label>Teléfono *</label>
+      <input type="tel" id="telefono" required>
+
+      <h2>🛒 Productos</h2>
+
+      <div id="productos">
+        <div class="producto">
+          <input type="text" class="producto-nombre" placeholder="Nombre o código del producto">
+          <input type="number" class="producto-cantidad" placeholder="1" min="1">
+          <button type="button" class="eliminar">🗑️</button>
+        </div>
+      </div>
+
+      <button type="button" class="add" onclick="añadirProducto()">＋ Añadir otro producto</button>
+
+      <label>¿Necesitas asesoramiento? (Opcional)</label>
+      <textarea id="asesoramiento" placeholder="Cuéntame en qué puedo ayudarte..."></textarea>
+
+      <label>¿En qué horario te viene mejor que te contacte? (Opcional)</label>
+      <input type="text" id="horario" placeholder="Ej: mañanas, tardes, a partir de las 18h">
+
+      <p class="info">
+        📌 Si solicitas asesoramiento, me pondré en contacto contigo lo antes posible.<br>
+        📦 Si realizas un pedido, te escribiré para confirmar disponibilidad, precio y forma de pago.
+      </p>
+
+      <div class="privacidad">
+        <input type="checkbox" id="privacidad" required>
+        <span>
+          He leído y acepto la política de privacidad. Los datos se usarán únicamente para gestionar el pedido y el asesoramiento.
+        </span>
+      </div>
+
+      <button type="button" class="enviar" onclick="enviarWhatsApp()">
+        Enviar pedido por WhatsApp
+      </button>
+
+      <a class="contactar" href="https://wa.me/34655237036?text=Hola,%20%C2%BFpuedes%20asesorarme%3F" target="_blank">
+        💬 Contactar por WhatsApp para asesoramiento
+      </a>
+
+    </form>
+  </div>
+
+  <script>
+    function añadirProducto() {
+      const contenedor = document.getElementById("productos");
+      const div = document.createElement("div");
+      div.className = "producto";
+      div.innerHTML = `
+        <input type="text" class="producto-nombre" placeholder="Nombre o código del producto">
+        <input type="number" class="producto-cantidad" placeholder="1" min="1">
+        <button type="button" class="eliminar">🗑️</button>
+      `;
+      contenedor.appendChild(div);
+
+      div.querySelector(".eliminar").onclick = () => div.remove();
+    }
+
+    document.addEventListener("click", function (e) {
+      if (e.target.classList.contains("eliminar")) {
+        e.target.parentElement.remove();
+      }
+    });
+
+    function enviarWhatsApp() {
+      if (!document.getElementById("privacidad").checked) {
+        alert("Debes aceptar la política de privacidad.");
+        return;
+      }
+
+      const nombre = document.getElementById("nombre").value;
+      const direccion = document.getElementById("direccion").value;
+      const cp = document.getElementById("cp").value;
+      const email = document.getElementById("email").value;
+      const telefono = document.getElementById("telefono").value;
+      const horario = document.getElementById("horario").value;
+      const asesoramiento = document.getElementById("asesoramiento").value;
+
+      let mensaje = `🛍️ *Nuevo pedido Oriflame*%0A%0A`;
+      mensaje += `👤 Nombre: ${nombre}%0A`;
+      mensaje += `🏠 Dirección: ${direccion}%0A`;
+      mensaje += `📮 CP: ${cp}%0A`;
+      mensaje += `📧 Email: ${email}%0A`;
+      mensaje += `📞 Teléfono: ${telefono}%0A`;
+
+      if (horario) {
+        mensaje += `⏰ Horario preferido: ${horario}%0A`;
+      }
+
+      mensaje += `%0A🛒 *Productos:*%0A`;
+
+      document.querySelectorAll(".producto").forEach((prod) => {
+        const nombreProd = prod.querySelector(".producto-nombre").value;
+        const cantidadProd = prod.querySelector(".producto-cantidad").value;
+        if (nombreProd) {
+          mensaje += `- ${nombreProd} x ${cantidadProd}%0A`;
+        }
+      });
+
+      if (asesoramiento) {
+        mensaje += `%0A💬 Asesoramiento:%0A${asesoramiento}`;
+      }
+
+      window.location.href = `https://wa.me/34655237036?text=${mensaje}`;
+    }
+  </script>
+
+</body>
+</html>
